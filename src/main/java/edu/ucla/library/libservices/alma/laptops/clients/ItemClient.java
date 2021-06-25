@@ -1,13 +1,23 @@
 
 package edu.ucla.library.libservices.alma.laptops.clients;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
+
 import edu.ucla.library.libservices.alma.laptops.beans.AlmaItem;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ItemClient {
+
+	final static Logger logger = LogManager.getLogger( ItemClient.class );
 
     private String key;
 
@@ -35,12 +45,27 @@ public class ItemClient {
 
     public AlmaItem getItem() {
         final AlmaItem item;
-        final Client client;
+        //final Client client;
+        final JsonParser parser;
+        final MappingJsonFactory factory;
+        final Response response;
+        final WebClient client;
 
-        client = ClientBuilder.newClient();
-        item = client.target(getLink().concat("?apikey=").concat(getKey())).request(MediaType.APPLICATION_JSON)
-                .get(AlmaItem.class);
+		try {
+			//client = ClientBuilder.newClient();
+			client = WebClient.create(getLink().concat("?apikey=").concat(getKey()));
+			client.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			response = client.get();
+			factory = new MappingJsonFactory();
+			parser = factory.createJsonParser((InputStream)response.getEntity());
+			item = parser.readValueAs(AlmaItem.class);
+			//item = client.target(getLink().concat("?apikey=").concat(getKey())).request(MediaType.APPLICATION_JSON)
+			//        .get(AlmaItem.class);
 
-        return item;
+			return item;
+		} catch (IOException details) {
+			logger.error(details.getMessage());
+			return null;
+		}
     }
 }

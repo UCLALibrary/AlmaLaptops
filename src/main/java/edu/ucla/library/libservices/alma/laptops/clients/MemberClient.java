@@ -1,13 +1,23 @@
 
 package edu.ucla.library.libservices.alma.laptops.clients;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MappingJsonFactory;
+
 import edu.ucla.library.libservices.alma.laptops.beans.MemberList;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MemberClient {
+
+    final static Logger logger = LogManager.getLogger( MemberClient.class );
 
     private String key;
 
@@ -64,15 +74,20 @@ public class MemberClient {
     }
 
     public MemberList getRecords() {
-        final Client client;
-        final MemberList records;
-
-        client = ClientBuilder.newClient();
-
-        records = client.target(buildURI()).request(MediaType.APPLICATION_JSON).get(MemberList.class);
-
-        return records;
+		try {
+			final WebClient client = WebClient.create(buildURI());
+			client.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+			Response response = client.get();
+			MappingJsonFactory factory = new MappingJsonFactory();
+			JsonParser parser = factory.createJsonParser((InputStream)response.getEntity());
+			final MemberList records = parser.readValueAs(MemberList.class);
+			return records;
+		} catch (IOException details) {
+			logger.error(details.getMessage());
+			return null;
+		}
     }
+
 
     private String buildURI() {
         StringBuilder uri = new StringBuilder(getBaseURL());

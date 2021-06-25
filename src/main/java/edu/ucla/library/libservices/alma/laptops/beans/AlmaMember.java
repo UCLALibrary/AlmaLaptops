@@ -10,6 +10,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AlmaMember {
 
+    @XmlAttribute(name = "id")
+    private String id;
+
     @XmlAttribute(name = "link")
     private String link;
 
@@ -18,6 +21,14 @@ public class AlmaMember {
 
     public AlmaMember() {
         super();
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setLink(String link) {

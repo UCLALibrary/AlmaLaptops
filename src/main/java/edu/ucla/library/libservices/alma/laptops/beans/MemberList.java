@@ -14,28 +14,28 @@ public class MemberList {
 
 
     @XmlAttribute(name = "total_record_count")
-    private int recordCount;
+    private int total_record_count;
 
     @XmlElement(name = "member")
-    private List<AlmaMember> records;
+    private List<AlmaMember> member;
 
     public MemberList() {
         super();
     }
 
-    public List<AlmaMember> getRecords() {
-        return records;
+    public List<AlmaMember> getMember() {
+        return member;
     }
 
-    public void setRecords(List<AlmaMember> records) {
-        this.records = records;
+    public void setMember(List<AlmaMember> records) {
+        this.member = records;
     }
 
-    public int getRecordCount() {
-        return recordCount;
+    public int getTotal_record_count() {
+        return total_record_count;
     }
 
-    public void setRecordCount(int recordCount) {
-        this.recordCount = recordCount;
+    public void setTotal_record_count(int recordCount) {
+        this.total_record_count = recordCount;
     }
 }
