@@ -8,6 +8,7 @@ import edu.ucla.library.libservices.alma.laptops.beans.AlmaItem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -45,27 +46,34 @@ public class ItemClient {
 
     public AlmaItem getItem() {
         final AlmaItem item;
-        //final Client client;
         final JsonParser parser;
         final MappingJsonFactory factory;
         final Response response;
         final WebClient client;
 
 		try {
-			//client = ClientBuilder.newClient();
 			client = WebClient.create(getLink().concat("?apikey=").concat(getKey()));
 			client.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			response = client.get();
-			factory = new MappingJsonFactory();
-			parser = factory.createJsonParser((InputStream)response.getEntity());
-			item = parser.readValueAs(AlmaItem.class);
-			//item = client.target(getLink().concat("?apikey=").concat(getKey())).request(MediaType.APPLICATION_JSON)
-			//        .get(AlmaItem.class);
+			if (response.getStatus() == 200) {
+				factory = new MappingJsonFactory();
+				parser = factory.createJsonParser((InputStream)response.getEntity());
+				item = parser.readValueAs(AlmaItem.class);
 
-			return item;
+				return item;
+			} else {
+				logger.error(response.getStatusInfo().getReasonPhrase());
+				return new AlmaItem();
+			}
+		} catch (SocketTimeoutException details) {
+			logger.error(details.getMessage());
+			return new AlmaItem();
 		} catch (IOException details) {
 			logger.error(details.getMessage());
-			return null;
+			return new AlmaItem();
+		} catch (Exception details) {
+			logger.error(details.getMessage());
+			return new AlmaItem();
 		}
     }
 }

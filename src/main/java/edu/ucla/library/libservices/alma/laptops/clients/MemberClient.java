@@ -8,6 +8,7 @@ import edu.ucla.library.libservices.alma.laptops.beans.MemberList;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -78,13 +79,25 @@ public class MemberClient {
 			final WebClient client = WebClient.create(buildURI());
 			client.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			Response response = client.get();
-			MappingJsonFactory factory = new MappingJsonFactory();
-			JsonParser parser = factory.createJsonParser((InputStream)response.getEntity());
-			final MemberList records = parser.readValueAs(MemberList.class);
-			return records;
+
+			if (response.getStatus() == 200) {
+				MappingJsonFactory factory = new MappingJsonFactory();
+				JsonParser parser = factory.createJsonParser((InputStream)response.getEntity());
+				final MemberList records = parser.readValueAs(MemberList.class);
+				return records;
+			} else {
+				logger.error(response.getStatusInfo().getReasonPhrase());
+				return new MemberList();
+			}
+		} catch (SocketTimeoutException details) {
+			logger.error(details.getMessage());
+			return new MemberList();
 		} catch (IOException details) {
 			logger.error(details.getMessage());
-			return null;
+			return new MemberList();
+		} catch (Exception details) {
+			logger.error(details.getMessage());
+			return new MemberList();
 		}
     }
 
