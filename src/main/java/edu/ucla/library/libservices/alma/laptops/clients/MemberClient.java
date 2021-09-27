@@ -8,7 +8,9 @@ import edu.ucla.library.libservices.alma.laptops.beans.MemberList;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
+import javax.net.ssl.SSLException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -90,6 +92,12 @@ public class MemberClient {
 				return new MemberList();
 			}
 		} catch (SocketTimeoutException details) {
+			logger.error(details.getMessage());
+			return new MemberList();
+		} catch (NoRouteToHostException details) {
+			logger.error(details.getMessage());
+			return new MemberList();
+		} catch (SSLException details) {
 			logger.error(details.getMessage());
 			return new MemberList();
 		} catch (IOException details) {

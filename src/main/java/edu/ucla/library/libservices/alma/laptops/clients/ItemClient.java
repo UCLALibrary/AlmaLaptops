@@ -8,7 +8,9 @@ import edu.ucla.library.libservices.alma.laptops.beans.AlmaItem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
+import javax.net.ssl.SSLException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -66,6 +68,12 @@ public class ItemClient {
 				return new AlmaItem();
 			}
 		} catch (SocketTimeoutException details) {
+			logger.error(details.getMessage());
+			return new AlmaItem();
+		} catch (NoRouteToHostException details) {
+			logger.error(details.getMessage());
+			return new AlmaItem();
+		} catch (SSLException details) {
 			logger.error(details.getMessage());
 			return new AlmaItem();
 		} catch (IOException details) {
