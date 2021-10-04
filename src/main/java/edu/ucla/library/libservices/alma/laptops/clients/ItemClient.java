@@ -14,6 +14,7 @@ import javax.net.ssl.SSLException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -67,6 +68,9 @@ public class ItemClient {
 				logger.error(response.getStatusInfo().getReasonPhrase());
 				return new AlmaItem();
 			}
+		} catch (Fault details) {
+			logger.error(details.getMessage());
+			return new AlmaItem();
 		} catch (SocketTimeoutException details) {
 			logger.error(details.getMessage());
 			return new AlmaItem();
