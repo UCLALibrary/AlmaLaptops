@@ -61,7 +61,7 @@ public class LaptopBuilder {
             }
         }
         availableItems =
-                items.stream().filter(f -> f.getItem_data().getBase_status().getValue().equals("1")).collect(Collectors.toList());
+                items.stream().filter(f -> f.getItem_data() != null && f.getItem_data().getBase_status().getValue().equals("1")).collect(Collectors.toList());
         availableItems.stream().forEach(i -> locations.add(i.getItem_data().getLibrary().getValue()));
         locations.stream().forEach(e -> locsWithCounts.add(makeNewAvailableItem(e)));
         locsWithCounts.stream().forEach(e -> setCounts(e, availableItems));
