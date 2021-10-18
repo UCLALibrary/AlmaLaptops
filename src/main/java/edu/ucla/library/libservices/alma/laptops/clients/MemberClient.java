@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
 import javax.net.ssl.SSLException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -92,6 +94,9 @@ public class MemberClient {
 				logger.error(response.getStatusInfo().getReasonPhrase());
 				return new MemberList();
 			}
+		} catch (UnknownHostException details) {
+			logger.error(details.getMessage());
+			return new MemberList();
 		} catch (Fault details) {
 			logger.error(details.getMessage());
 			return new MemberList();

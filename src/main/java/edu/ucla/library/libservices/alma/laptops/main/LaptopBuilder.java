@@ -82,13 +82,15 @@ public class LaptopBuilder {
   }
 
     private static void addItems(MemberList records, List<AlmaItem> items) {
-        for (AlmaMember theRecord : records.getMember()) {
-            ItemClient client = new ItemClient();
-			client.setKey(props.getProperty("alma.key"));
-            client.setLink(theRecord.getLink());
-            AlmaItem item = client.getItem();
-            items.add(item);
-        }
+        if (records != null && records.getMember() != null ) {
+            for (AlmaMember theRecord : records.getMember()) {
+                    ItemClient client = new ItemClient();
+			        client.setKey(props.getProperty("alma.key"));
+                    client.setLink(theRecord.getLink());
+                    AlmaItem item = client.getItem();
+                    items.add(item);
+            }
+		}
     }
 
     private static AvailableItems makeNewAvailableItem(String aLocation) {
