@@ -23,7 +23,8 @@ import javax.xml.bind.annotation.XmlType;
 						"internal_note_1", "internal_note_2", "internal_note_3", "statistics_note_1",
 						"statistics_note_2", "statistics_note_3", "requested", "edition", "imprint", "language",
 						"library_details", "parsed_alt_call_number", "parsed_call_number", "parsed_issue_level_description",
-						"title_abcnph", "physical_condition", "link" })
+						"title_abcnph", "physical_condition", "link", "committed_to_retain", "retention_reason",
+						"retention_note" })
 public class ItemData {
 
     @XmlElement(name = "barcode")
