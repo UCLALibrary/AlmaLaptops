@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 @JsonRootName(value = "item")
 @XmlAccessorType(XmlAccessType.FIELD)
-@JsonIgnoreProperties({ "bib_data", "holding_data", "link" })
+@JsonIgnoreProperties({ "bib_data", "holding_data", "link", "additional_info" })
 public class AlmaItem {
 
     @XmlElement(name = "bib_data")
